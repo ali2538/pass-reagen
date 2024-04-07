@@ -1,5 +1,8 @@
+
 export default function Label(props) {
     return (
-        <label>{props.text}</label>
+        <label htmlFor={props.htmlFor}>
+            {props.text}
+        </label>
     )
 }

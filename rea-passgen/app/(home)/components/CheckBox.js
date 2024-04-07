@@ -1,5 +1,6 @@
-export default function CheckBox() {
+
+export default function CheckBox(props) {
     return (
-        <input type="checkbox" />
+        <input defaultChecked={props.defaultChecked} id={props.id} checked={props.checked} type="checkbox" name={props.name} onChange={e => props.onChange(e)} />
     )
 } 
