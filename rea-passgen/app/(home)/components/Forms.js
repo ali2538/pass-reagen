@@ -1,53 +1,135 @@
 "use client"
 import Label from "./Label";
 import CheckBox from "./CheckBox";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import Button from "./Button";
+import TextBox from "./TextBox";
+import NumberAdjust from "./NumberAdjust";
+import Slider from "./Slider";
+import { resolve } from "styled-jsx/css";
 export default function Form() {
+    //var minPasswordLength = 10
+    const maxPasswordLength = 50
+    const minNumberOfLowercase = 1
+    const minNumberOfUppercase = 1
+    const minNumberOfLetters = 2
+    const [minPasswordLength, setMinPasswordLength] = useState(10)
     const [uppercaseSelected, setUppercaseSelected] = useState(true)
     const [lowercaseSelected, setLowercaseSelected] = useState(true)
     const [digitsSelected, setDigitsSelected] = useState(true)
     const [specialCharsSelected, setSpecialCharsSelected] = useState(false)
-    function toggleOption(e) {
+    const [passwordGenerated, setPasswordGenerated] = useState(false)
+    const [passwordLength, setPasswordLength] = useState(10)
+    const [numberOfDigits, setNumberOfDigits] = useState(1)
+    const [numberOfSpecialChars, setNumberOfSpecialChars] = useState(0)
+    const [numberOfLetters, setNumberOfLetters] = useState(maxPasswordLength - numberOfDigits - numberOfSpecialChars)
+
+    useEffect(() => {
+        if (specialCharsSelected) {
+            setNumberOfSpecialChars(1)
+        } else if (!specialCharsSelected) {
+            setNumberOfSpecialChars(0)
+        }
+        if (digitsSelected) {
+            setNumberOfDigits(1)
+        } else if (!digitsSelected) {
+            setNumberOfDigits(0)
+        }
+    })
+    var setSpecialCharSelectionToggle = () => new Promise(resolve => setSpecialCharsSelected(!specialCharsSelected))
+
+    async function toggleOption(e) {
         switch (e.target.id) {
             case "uppercaseOption":
-                setUppercaseSelected(!uppercaseSelected);
+                if (!lowercaseSelected && !digitsSelected && !specialCharsSelected) {
+                    setUppercaseSelected(!uppercaseSelected);
+                    setLowercaseSelected(true)
+                } else {
+                    setUppercaseSelected(!uppercaseSelected);
+                }
                 break;
             case "lowercaseOption":
-                setLowercaseSelected(!lowercaseSelected);
+                if (!uppercaseSelected && !digitsSelected && !specialCharsSelected) {
+                    setLowercaseSelected(!lowercaseSelected);
+                    setUppercaseSelected(true)
+                } else {
+                    setLowercaseSelected(!lowercaseSelected);
+                }
                 break;
             case "digitsOption":
-                setDigitsSelected(!digitsSelected);
+                if (!uppercaseSelected && digitsSelected && !specialCharsSelected && !lowercaseSelected) {
+                    setDigitsSelected(!digitsSelected);
+                    setLowercaseSelected(true)
+                } else {
+                    setDigitsSelected(!digitsSelected);
+                }
+
                 break;
             case "specialCharOptions":
-                setSpecialCharsSelected(!specialCharsSelected);
+                if (!uppercaseSelected && !digitsSelected && specialCharsSelected && !lowercaseSelected) {
+                    setSpecialCharsSelected(!specialCharsSelected)
+                    setLowercaseSelected(true)
+                } else {
+                    setSpecialCharsSelected(!specialCharsSelected)
+                }
+                setSpecialCharsSelected(!specialCharsSelected)
+
+                console.log(`special char count ${numberOfSpecialChars}`);
                 break;
             default:
                 break;
         }
 
     }
-
+    function generatePassword() {
+        console.log("sup");
+    }
+    function passwordLengthChanged(e) {
+        setPasswordLength(e.target.value)
+    }
+    function numberOfDigitsChanged(e) {
+        setNumberOfDigits(e.target.value)
+    }
+    function numberOfSpecialCharsChanged(e) {
+        setNumberOfSpecialChars(e.target.value)
+    }
     function checkMe() {
         console.log("You got me");
         console.log(uppercaseSelected);
     }
     return (
         <form>
-            <CheckBox defaultChecked={uppercaseSelected} checked={uppercaseSelected} id="uppercaseOption" onChange={toggleOption} />
+            <CheckBox checked={uppercaseSelected} id="uppercaseOption" onChange={toggleOption} />
             <Label text="A-Z" htmlFor="uppercaseOption" />
             <br />
             <br />
-            <CheckBox defaultChecked={lowercaseSelected} checked={lowercaseSelected} id="lowercaseOption" onChange={toggleOption} />
+            <CheckBox checked={lowercaseSelected} id="lowercaseOption" onChange={toggleOption} />
             <Label text="a-z" htmlFor="lowercaseOption" />
             <br />
             <br />
-            <CheckBox defaultChecked={digitsSelected} checked={digitsSelected} id="digitsOption" onChange={toggleOption} />
+            <CheckBox checked={digitsSelected} id="digitsOption" onChange={toggleOption} />
             <Label text="0-9" htmlFor="digitsOption" />
             <br />
             <br />
-            <CheckBox defaultChecked={specialCharsSelected} checked={specialCharsSelected} id="specialCharOptions" onChange={toggleOption} />
+            <CheckBox checked={specialCharsSelected} id="specialCharOptions" onChange={toggleOption} />
             <Label text="!@#$%^&*" htmlFor="specialCharOptions" />
             <br />
+            <br />
+            <Button title="Generate Password" onClick={generatePassword} />
+            <br />
+            <Button title="Copy to Clipboard" />
+            <br />
+            <Button title="Cleat Password" />
+            <br />
+            <TextBox id="generatedPassword" />
+            <br />
+            <NumberAdjust min={minPasswordLength} max={maxPasswordLength} value={passwordLength} id="password-length-number" onChange={passwordLengthChanged} />
+            <br />
+            <Slider min={minPasswordLength} max={maxPasswordLength} value={passwordLength} id="password-length-slider" onChange={passwordLengthChanged} />
+            <br />
+            <NumberAdjust min="1" max={minPasswordLength - minNumberOfLetters - numberOfSpecialChars} disabled={digitsSelected} value={numberOfDigits} id="digits-count" onChange={numberOfDigitsChanged} />
+            <br />
+            <NumberAdjust min="0" max={minPasswordLength - minNumberOfLetters - numberOfDigits} disabled={specialCharsSelected} value={numberOfSpecialChars} id="spec-char-count" onChange={numberOfSpecialCharsChanged} />
             <br />
         </form>
     )
