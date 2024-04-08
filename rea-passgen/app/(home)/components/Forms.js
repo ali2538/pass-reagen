@@ -9,6 +9,7 @@ import Slider from "./Slider";
 import { resolve } from "styled-jsx/css";
 export default function Form() {
     //var minPasswordLength = 10
+    const url_base = "http://127.0.0.1:8000/api/passwd/"
     const maxPasswordLength = 50
     const minNumberOfLowercase = 1
     const minNumberOfUppercase = 1
@@ -23,6 +24,7 @@ export default function Form() {
     const [numberOfDigits, setNumberOfDigits] = useState(1)
     const [numberOfSpecialChars, setNumberOfSpecialChars] = useState(0)
     const [numberOfLetters, setNumberOfLetters] = useState(maxPasswordLength - numberOfDigits - numberOfSpecialChars)
+    const [generatedPassword, setGeneratedPassword] = useState("")
 
     useEffect(() => {
         if (specialCharsSelected) {
@@ -36,7 +38,7 @@ export default function Form() {
             setNumberOfDigits(0)
         }
     })
-    var setSpecialCharSelectionToggle = () => new Promise(resolve => setSpecialCharsSelected(!specialCharsSelected))
+    //var setSpecialCharSelectionToggle = () => new Promise(resolve => setSpecialCharsSelected(!specialCharsSelected))
 
     async function toggleOption(e) {
         switch (e.target.id) {
@@ -81,8 +83,14 @@ export default function Form() {
         }
 
     }
-    function generatePassword() {
-        console.log("sup");
+    async function generatePassword(e) {
+        e.preventDefault()
+        console.log(`${url_base}?passw_length=${passwordLength}&uppercase=${uppercaseSelected}&lowercase=${lowercaseSelected}&min_digits=${numberOfDigits}&min_spec_chars=${numberOfSpecialChars}&digits=${digitsSelected}&spec_chars=${specialCharsSelected}`);
+        const response = await fetch(`${url_base}?passw_length=${passwordLength}&uppercase=${uppercaseSelected}&lowercase=${lowercaseSelected}&min_digits=${numberOfDigits}&min_spec_chars=${numberOfSpecialChars}&digits=${digitsSelected}&spec_chars=${specialCharsSelected}`)
+        const data = await response.json()
+        console.log(data.gen_password);
+        setGeneratedPassword(data.gen_password)
+        setPasswordGenerated(true)
     }
     function passwordLengthChanged(e) {
         setPasswordLength(e.target.value)
@@ -121,7 +129,7 @@ export default function Form() {
             <br />
             <Button title="Cleat Password" />
             <br />
-            <TextBox id="generatedPassword" />
+            <TextBox id="generatedPassword" value={generatedPassword} />
             <br />
             <NumberAdjust min={minPasswordLength} max={maxPasswordLength} value={passwordLength} id="password-length-number" onChange={passwordLengthChanged} />
             <br />

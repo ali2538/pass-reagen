@@ -1,5 +1,5 @@
 export default function Button(props) {
     return (
-        <button>{props.title}</button>
+        <button onClick={e => props.onClick(e)}>{props.title}</button>
     )
 }

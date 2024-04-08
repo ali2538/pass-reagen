@@ -1,5 +1,5 @@
 export default function TextBox(props) {
     return (
-        <input type="text" id={props.id}></input>
+        <input type="text" id={props.id} value={props.value} />
     )
 }
