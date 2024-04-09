@@ -151,89 +151,125 @@ export default function Form() {
 
   return (
     <form className={styles.mainForm}>
-      <div>
-        <CheckBox
-          checked={uppercaseSelected}
-          id="uppercaseOption"
-          onChange={toggleOption}
-        />
-        <Label text="A-Z" htmlFor="uppercaseOption" />
+      <div className={styles.optionCountRow}>
+        <div>
+          <CheckBox
+            checked={uppercaseSelected}
+            id="uppercaseOption"
+            onChange={toggleOption}
+          />
+          <Label
+            className={styles.optionLabels}
+            text="A-Z"
+            htmlFor="uppercaseOption"
+          />
+        </div>
+        <div>
+          <NumberAdjust
+            min={minPasswordLength}
+            max={maxPasswordLength}
+            value={passwordLength}
+            id="password-length-number"
+            onChange={passwordLengthChanged}
+            className={styles.numberAdjust}
+          />
+        </div>
       </div>
-      <div>
-        <CheckBox
-          checked={lowercaseSelected}
-          id="lowercaseOption"
-          onChange={toggleOption}
+      <div className={styles.optionCountRow}>
+        <div>
+          <CheckBox
+            checked={lowercaseSelected}
+            id="lowercaseOption"
+            onChange={toggleOption}
+          />
+          <Label
+            className={styles.optionLabels}
+            text="a-z"
+            htmlFor="lowercaseOption"
+          />
+        </div>
+        <Slider
+          min={minPasswordLength}
+          max={maxPasswordLength}
+          value={passwordLength}
+          id="password-length-slider"
+          onChange={passwordLengthChanged}
         />
-        <Label text="a-z" htmlFor="lowercaseOption" />
       </div>
-      <div>
-        <CheckBox
-          checked={digitsSelected}
-          id="digitsOption"
-          onChange={toggleOption}
+      <div className={styles.optionCountRow}>
+        <div>
+          <CheckBox
+            checked={digitsSelected}
+            id="digitsOption"
+            onChange={toggleOption}
+          />
+          <Label
+            className={styles.optionLabels}
+            text="0-9"
+            htmlFor="digitsOption"
+          />
+        </div>
+        <NumberAdjust
+          min="1"
+          max={passwordLength - minNumberOfLetters - numberOfSpecialChars}
+          disabled={digitsSelected ? "" : "disabled"}
+          value={numberOfDigits}
+          id="digits-count"
+          onChange={numberOfDigitsChanged}
         />
-        <Label text="0-9" htmlFor="digitsOption" />
       </div>
-      <div>
-        <CheckBox
-          checked={specialCharsSelected}
-          id="specialCharOptions"
-          onChange={toggleOption}
+      <div className={styles.optionCountRow}>
+        <div>
+          <CheckBox
+            checked={specialCharsSelected}
+            id="specialCharOptions"
+            onChange={toggleOption}
+          />
+          <Label
+            className={styles.optionLabels}
+            text="!@#$%^&*"
+            htmlFor="specialCharOptions"
+          />
+        </div>
+        <NumberAdjust
+          min="0"
+          max={passwordLength - minNumberOfLetters - numberOfDigits}
+          disabled={specialCharsSelected ? "" : "disabled"}
+          value={numberOfSpecialChars}
+          id="spec-char-count"
+          onChange={numberOfSpecialCharsChanged}
         />
-        <Label text="!@#$%^&*" htmlFor="specialCharOptions" />
       </div>
-      <Button
-        title={
-          passwordAlreadyGenerated ? "Regenerate Password" : "Generate Password"
-        }
-        onClick={generatePassword}
-      />
-      <Button
-        title="Copy to Clipboard"
-        onClick={handleCopyBtnClick}
-        disabled={passwordAlreadyGenerated ? "" : "disabled"}
-      />
-      <Button
-        title="Clear Password"
-        onClick={clearGeneratedPassword}
-        disabled={passwordAlreadyGenerated ? "" : "disabled"}
-      />
+      <div className={styles.buttonRow}>
+        <Button
+          title={
+            passwordAlreadyGenerated
+              ? "Regenerate Password"
+              : "Generate Password"
+          }
+          onClick={generatePassword}
+          className={styles.buttonItem}
+        />
+        <Button
+          title="Copy to Clipboard"
+          onClick={handleCopyBtnClick}
+          disabled={passwordAlreadyGenerated ? "" : "disabled"}
+          className={styles.buttonItem}
+        />
+        <Button
+          title="Clear Password"
+          onClick={clearGeneratedPassword}
+          disabled={passwordAlreadyGenerated ? "" : "disabled"}
+          className={styles.buttonItem}
+        />
+      </div>
       <TextBox
         id="generatedPassword"
         defaultValue={password}
         readOnly="readonly"
+        className={styles.textBox}
       />
-      <NumberAdjust
-        min={minPasswordLength}
-        max={maxPasswordLength}
-        value={passwordLength}
-        id="password-length-number"
-        onChange={passwordLengthChanged}
-      />
-      <Slider
-        min={minPasswordLength}
-        max={maxPasswordLength}
-        value={passwordLength}
-        id="password-length-slider"
-        onChange={passwordLengthChanged}
-      />
-      <NumberAdjust
-        min="1"
-        max={passwordLength - minNumberOfLetters - numberOfSpecialChars}
-        disabled={digitsSelected ? "" : "disabled"}
-        value={numberOfDigits}
-        id="digits-count"
-        onChange={numberOfDigitsChanged}
-      />
-      <NumberAdjust
-        min="0"
-        max={passwordLength - minNumberOfLetters - numberOfDigits}
-        disabled={specialCharsSelected ? "" : "disabled"}
-        value={numberOfSpecialChars}
-        id="spec-char-count"
-        onChange={numberOfSpecialCharsChanged}
-      />
+
       <br />
     </form>
   );
