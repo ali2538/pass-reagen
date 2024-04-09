@@ -42,3 +42,7 @@ next-env.d.ts
 /rea-passgen/.DS_Store
 thumbs.db
 TODO
+
+# amplify
+.amplify
+amplifyconfiguration*
