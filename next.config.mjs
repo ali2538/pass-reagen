@@ -12,8 +12,8 @@ const nextConfig = {
    *
    * @see https://nextjs.org/docs/app/api-reference/next-config-js/basePath
    */
-  basePath: "/ali2538",
-  assetPrefix: "/ali2538",
+  // basePath: "/ali2538",
+  //assetPrefix: "/ali2538",
   /**
    * Disable server-based image optimization. Next.js does not support
    * dynamic features with static exports.
